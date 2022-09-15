@@ -74,6 +74,24 @@ RVTEST_CODE_BEGIN
     li  x2, 2; \
   )
 
+  // add by Ben Shu: test load-after-beq hazard
+  test_20:
+  	li TESTNUM, 20
+  	li x8, 0x123456789
+	la x2, tdat5
+	sd x8, (x2)
+	ld x4, (x2)
+	bne x4, x8, fail
+
+  test_21:
+  	li TESTNUM, 21
+	la x1, tdat6
+	la x2, tdat5
+	ld  x10, (x1)
+	sd  x10, (x2)
+	ld  x11, (x2)
+	bne x10, x11, fail
+
   TEST_PASSFAIL
 
 RVTEST_CODE_END
@@ -88,5 +106,7 @@ tdat1:  .dword 0x00ff00ff00ff00ff
 tdat2:  .dword 0xff00ff00ff00ff00
 tdat3:  .dword 0x0ff00ff00ff00ff0
 tdat4:  .dword 0xf00ff00ff00ff00f
+tdat5:  .dword 0x0
+tdat6:  .dword 0x0
 
 RVTEST_DATA_END
